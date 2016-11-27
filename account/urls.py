@@ -19,6 +19,6 @@ import account.views as views
 urlpatterns = [
     url(r'^users', views.UserList.as_view()),
     url(r'^register', views.Register.as_view()),
-    # url(r'^login', ),
+    url(r'^login', views.Login.as_view()),
     # url(r'^logout', ),
 ]
