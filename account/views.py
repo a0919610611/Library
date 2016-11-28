@@ -1,13 +1,13 @@
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from rest_framework import authentication, permissions, generics, viewsets, status
+from rest_framework import authentication, generics, viewsets, status
+from rest_framework.permissions import IsAdminUser
 from .serializers import *
-from django.conf import settings
-import requests
 from django.contrib.auth import get_user_model
 from rest_framework_jwt.settings import api_settings
 from datetime import datetime
 from django.contrib.auth import authenticate
+from Library.permissions import IsOwnerOrAdmin
 
 jwt_payload_handler = api_settings.JWT_PAYLOAD_HANDLER
 jwt_encode_handler = api_settings.JWT_ENCODE_HANDLER
@@ -16,7 +16,18 @@ User = get_user_model()
 
 
 class UserList(generics.ListAPIView):
-    # authentication_classes = (authentication.)
+    permission_classes = (IsOwnerOrAdmin,)
+    serializer_class = UserSerializer
+    lookup_field = 'pk'
+
+    def get_queryset(self):
+        if self.request.user.is_staff:
+            return User.objects.all()
+        else:
+            return User.objects.filter(owner=self.request.user)
+
+
+class UserDetail(generics.RetrieveAPIView):
     queryset = User.objects.all()
     serializer_class = UserSerializer
     lookup_field = 'pk'
@@ -32,10 +43,13 @@ class Register(generics.CreateAPIView):
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         # try:
-        user = User.objects.create_user(email=serializer.data['email'], password=serializer.data['password'])
+        username = serializer.data['username']
+        email = serializer.data['email']
+        password = serializer.data['password']
+        user = User.objects.create_user(username=username, email=email,
+                                        password=password)
         payload = jwt_payload_handler(user)
         print(payload)
-
         data = {}
         data['token'] = jwt_encode_handler(payload)
         return Response(data=data, status=status.HTTP_201_CREATED)
@@ -46,23 +60,25 @@ class Register(generics.CreateAPIView):
 class Login(APIView):
     authentication_classes = ()
     permission_classes = ()
-    serializer_class = RegisterSerializer
+    serializer_class = UserSerializer
 
     def post(self, request):
-        print('hi')
         serializer = RegisterSerializer(data=request.data)
         serializer.is_valid(raise_exception=False)
         # try:
-        email = serializer.data['email']
+        username = serializer.data['username']
         password = serializer.data['password']
-        print(password)
-        user = authenticate(email=email, password=password)
-        print(user.password)
+        data = {}
+        try:
+            user = User.objects.get(username=username)
+        except:
+            data['error'] = 'No This User'
+            return Response(data=data, status=status.HTTP_401_UNAUTHORIZED)
+        user = authenticate(username=username, password=password)
         if user is None:
-            return Response('Password Wrong', status=status.HTTP_200_OK)
+            data['error'] = 'Password Wrong'
+            return Response(data=data, status=status.HTTP_401_UNAUTHORIZED)
         payload = jwt_payload_handler(user)
         data = {}
         data['token'] = jwt_encode_handler(payload)
         return Response(data=data, status=status.HTTP_200_OK)
-        # except:
-        #     return Response('Some thing wrong', status=status.HTTP_200_OK)

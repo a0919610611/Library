@@ -4,22 +4,22 @@ from datetime import datetime
 
 
 class CustomUserManager(BaseUserManager):
-    def create_user(self, email, password=None):
+    def create_user(self, username, email, password=None):
         if not email:
             raise ValueError('Email is required')
         user = self.model(
-            # name=name,
+            username=username,
             email=self.normalize_email(email),
         )
         user.set_password(password)
         user.save()
         return user
 
-    def create_superuser(self, email, password=None):
+    def create_superuser(self, username, email, password=None):
         if not email:
             raise ValueError('Email is required')
         user = self.model(
-            # name=name,
+            username=username,
             email=self.normalize_email(email),
         )
         user.set_password(password)
@@ -35,27 +35,31 @@ class CustomUserManager(BaseUserManager):
 
 # Create your models here.
 class CustomUser(AbstractBaseUser, PermissionsMixin):
-    # username = models.CharField('Username', max_length=30, unique=True)
+    username = models.CharField('Username', max_length=30, unique=True)
     student_id = models.CharField('StudentId', max_length=10)
+    address = models.CharField('Address', max_length=255)
     email = models.EmailField('Email', unique=True)
-    name = models.CharField('Name', max_length=30)
-    is_staff = models.BooleanField('staff_status', default=False)
-    is_active = models.BooleanField('active_status', default=True)
+    first_name = models.CharField('First name', max_length=50)
+    last_name = models.CharField('Last name', max_length=50)
+    phone_number = models.CharField('Phone Number', max_length=50)
+    is_staff = models.BooleanField('staff status', default=False)
+    is_active = models.BooleanField('active status', default=True)
     date_joined = models.DateTimeField('join date', auto_now=datetime.now)
 
     objects = CustomUserManager()
 
-    USERNAME_FIELD = 'email'
+    USERNAME_FIELD = 'username'
+    REQUIRED_FIELDS = ['email', ]
 
     class Meta:
         verbose_name = 'user'
         verbose_name_plural = 'users'
 
     def __str__(self):
-        return self.name
+        return self.first_name + self.last_name
 
     def get_short_name(self):
-        return self.name
+        return self.first_name
 
     def get_full_name(self):
-        return self.name
+        return self.first_name + self.last_name

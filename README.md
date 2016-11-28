@@ -12,3 +12,8 @@ Python3
 #Database
 Sqlite in Development  
 MariaDB in Production
+
+#How To Run
+pip3 install -r requriments.txt
+./init.sh
+./manage.py runserver (defualt is 127.0.0.0:8000)
