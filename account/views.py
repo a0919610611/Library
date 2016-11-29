@@ -29,6 +29,9 @@ class UserViewSet(viewsets.ModelViewSet):
 
 
 class Register(generics.CreateAPIView):
+    """
+     post: Create New User
+    """
     authentication_classes = ()
     permission_classes = ()
     queryset = User.objects.all()
@@ -53,6 +56,9 @@ class Register(generics.CreateAPIView):
 
 
 class Login(generics.CreateAPIView):
+    """
+        post:exchange token
+    """
     authentication_classes = ()
     permission_classes = ()
     serializer_class = UserSerializer

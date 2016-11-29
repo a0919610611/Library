@@ -130,7 +130,7 @@ AUTH_USER_MODEL = 'account.CustomUser'
 
 REST_FRAMEWORK = {
     'DEFAULT_PERMISSION_CLASSES': (
-        # 'rest_framework.permissions.IsAuthenticated',
+        'rest_framework.permissions.IsAuthenticatedOrReadOnly',
     ),
     'DEFAULT_AUTHENTICATION_CLASSES': (
         'rest_framework_jwt.authentication.JSONWebTokenAuthentication',
@@ -173,19 +173,20 @@ JWT_AUTH = {
     'JWT_AUTH_HEADER_PREFIX': 'JWT',
 }
 ## SWAGGER_SETTING
-# SWAGGER_SETTINGS = {
-#     "exclude_namespaces": [],  # List URL namespaces to ignore
-#     "api_version": '0.1',  # Specify your API's version
-#     "api_path": "/",  # Specify the path to your API not a root level
-#     "enabled_methods": [  # Specify which methods to enable in Swagger UI
-#         'get',
-#         'post',
-#         'put',
-#         'patch',
-#         'delete'
-#     ],
-#     "api_key": '',
-#     "is_authenticated": False,  # Set to True to enforce user authentication,
-#     "is_superuser": False,  # Set to True to enforce admin only access
-#     "token_type": 'JWT',
-# }
+SWAGGER_SETTINGS = {
+    'USE_SESSION_AUTH': False,
+    'SECURITY_DEFINITIONS': {
+        # 'basic': {
+        #     'type': 'basic'
+        # },
+        'api_key': {
+            'type': 'apiKey',
+            'in': 'header',
+            'name': 'Authorization'
+        },
+    },
+    "JSON_EDITOR": True,
+    "APIS_SORTER": "alpha",
+    "SHOW_REQUEST_HEADERS": True,
+
+}
