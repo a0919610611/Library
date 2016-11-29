@@ -7,8 +7,8 @@ from api.models import *
 
 
 class BookViewSet(viewsets.ModelViewSet):
-    permission_classes = ()
-    authentication_classes = ()
+    # permission_classes = ()
+    # authentication_classes = ()
     queryset = Book.objects.all()
     serializer_class = BookSerializer
     lookup_field = 'pk'

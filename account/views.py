@@ -15,22 +15,17 @@ jwt_decode_handler = api_settings.JWT_DECODE_HANDLER
 User = get_user_model()
 
 
-class UserList(generics.ListAPIView):
-    permission_classes = (IsOwnerOrAdmin,)
+class UserViewSet(viewsets.ModelViewSet):
+    # permission_classes = (IsOwnerOrAdmin,)
     serializer_class = UserSerializer
     lookup_field = 'pk'
+    queryset = User.objects.all()
 
     def get_queryset(self):
         if self.request.user.is_staff:
             return User.objects.all()
         else:
             return User.objects.filter(pk=self.request.user.pk)
-
-
-class UserDetail(generics.RetrieveAPIView):
-    queryset = User.objects.all()
-    serializer_class = UserSerializer
-    lookup_field = 'pk'
 
 
 class Register(generics.CreateAPIView):
@@ -57,7 +52,7 @@ class Register(generics.CreateAPIView):
         #     return Response('Some thing wrong', status=status.HTTP_200_OK)
 
 
-class Login(APIView):
+class Login(generics.CreateAPIView):
     authentication_classes = ()
     permission_classes = ()
     serializer_class = UserSerializer
