@@ -20,6 +20,6 @@ urlpatterns = [
     url(r'^admin/', admin.site.urls),
     url(r'^account/', include('account.urls')),
     url(r'^api/', include('api.urls')),
-    url(r'', include('rest_framework_docs.urls')),
+    url(r'', include('rest_framework_swagger.urls')),
     url(r'^api-auth/', include('rest_framework.urls', namespace='rest_framework')),
 ]

@@ -24,7 +24,7 @@ class UserList(generics.ListAPIView):
         if self.request.user.is_staff:
             return User.objects.all()
         else:
-            return User.objects.filter(owner=self.request.user)
+            return User.objects.filter(pk=self.request.user.pk)
 
 
 class UserDetail(generics.RetrieveAPIView):
@@ -79,6 +79,6 @@ class Login(APIView):
             data['error'] = 'Password Wrong'
             return Response(data=data, status=status.HTTP_401_UNAUTHORIZED)
         payload = jwt_payload_handler(user)
-        data = {}
+        data = dict()
         data['token'] = jwt_encode_handler(payload)
         return Response(data=data, status=status.HTTP_200_OK)
