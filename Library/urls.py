@@ -15,15 +15,37 @@ Including another URLconf
 """
 from django.conf.urls import url, include
 from django.contrib import admin
+
+from rest_framework.permissions import AllowAny
+from rest_framework.response import Response
+from rest_framework.schemas import SchemaGenerator
+from rest_framework.views import APIView
+from rest_framework_swagger import renderers
 from rest_framework_swagger.views import get_swagger_view
 
-schema_view = get_swagger_view(title='Pastebin API')
 
+class SwaggerSchemaView(APIView):
+    permission_classes = [AllowAny, ]
+    # authentication_classes = []
+    renderer_classes = [
+        renderers.OpenAPIRenderer,
+        renderers.SwaggerUIRenderer,
+    ]
+
+    def get(self, request):
+        generator = SchemaGenerator()
+        schema = generator.get_schema(request=request)
+
+        return Response(schema)
+
+
+schema_view = get_swagger_view(title='Library')
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
     url(r'^account/', include('account.urls')),
     url(r'^api/', include('api.urls')),
-    url(r'^$', schema_view),
+    # url(r'^$', schema_view),
+    url(r'^$', SwaggerSchemaView.as_view()),
     # url(r'', include('rest_framework_swagger.urls')),
     url(r'^api-auth/', include('rest_framework.urls', namespace='rest_framework')),
 ]

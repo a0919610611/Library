@@ -7,8 +7,12 @@ from api.models import *
 
 
 class BookViewSet(viewsets.ModelViewSet):
-    # permission_classes = ()
-    # authentication_classes = ()
+    """
+    list: show all books
+
+    retrieve: get one book by pk
+    """
+    permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
     queryset = Book.objects.all()
     serializer_class = BookSerializer
     lookup_field = 'pk'
