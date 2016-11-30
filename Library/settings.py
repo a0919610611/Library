@@ -39,7 +39,6 @@ INSTALLED_APPS = [
     'rest_framework',
     'rest_framework_swagger',
     'api',
-    'account',
 ]
 
 MIDDLEWARE_CLASSES = [
@@ -126,7 +125,7 @@ STATIC_URL = '/static/'
 
 # REST FRAMEWORK SETTING
 
-AUTH_USER_MODEL = 'account.CustomUser'
+AUTH_USER_MODEL = 'api.CustomUser'
 
 REST_FRAMEWORK = {
     'DEFAULT_PERMISSION_CLASSES': (
@@ -136,7 +135,14 @@ REST_FRAMEWORK = {
         'rest_framework_jwt.authentication.JSONWebTokenAuthentication',
         # 'rest_framework.authentication.BasicAuthentication',
         # 'rest_framework.authentication.SessionAuthentication',
-    )
+    ),
+    'DATETIME_FORMAT': '%Y-%m-%d %H:%M',
+    'DATETIME_INPUT_FORMATS': '%Y-%m-%d %H:%M',
+    'DATE_FORMAT': '%Y-%m-%d',
+    'DATE_INPUT_FORMATS': '%Y-%m-%d',
+    'TIME_FORMAT': '%H:%M',
+    'TIME_INPUT_FORMATS': '%H:%M',
+
 }
 
 # JWT Setting
