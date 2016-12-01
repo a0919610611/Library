@@ -3,12 +3,6 @@ from api.models import *
 from django.contrib.auth import get_user_model
 
 
-# class AuthorSerializer(serializers.ModelSerializer):
-#     class Meta:
-#         models = Author
-#         fields = ('name',)
-
-
 class BookSerializer(serializers.ModelSerializer):
     class Meta:
         model = Book

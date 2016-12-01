@@ -17,9 +17,17 @@ User = get_user_model()
 
 
 class UserViewSet(viewsets.ModelViewSet):
-    permission_classes = (IsAuthenticatedOrCreate,)
+    """
+    create: Create New User And Get Token
+    login: Username And Password To ExChange Token
+    """
     lookup_field = 'pk'
     queryset = User.objects.all()
+
+    def get_permissions(self):
+        if self.action in ('login', 'create'):
+            self.permission_classes = [AllowAny, ]
+        return super(self.__class__, self).get_permissions()
 
     def get_serializer_class(self):
         if self.action == 'login':
@@ -35,19 +43,12 @@ class UserViewSet(viewsets.ModelViewSet):
     def create(self, request, *args, **kwargs):
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
-        # try:
-        # username = serializer.data['username']
-        # email = serializer.data['email']
-        # password = serializer.data['password']
         user = User(**serializer.data)
         user.save()
         payload = jwt_payload_handler(user)
-        print(payload)
         data = dict()
         data['token'] = jwt_encode_handler(payload)
         return Response(data=data, status=status.HTTP_201_CREATED)
-        # except:
-        #     return Response('Some thing wrong', status=status.HTTP_200_OK)
 
     @decorators.list_route(methods=['post'])
     def login(self, request):

@@ -36,7 +36,7 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
     student_id = models.CharField('StudentId', max_length=10, blank=True, null=True)
     address = models.CharField('Address', max_length=255, blank=True, null=True)
     email = models.EmailField('Email', unique=True)
-    birthday = models.CharField('BirthDay', default="", max_length=20)
+    birthday = models.DateField('BirthDay', blank=True, null=True)
     first_name = models.CharField('First name', max_length=50, default="")
     last_name = models.CharField('Last name', max_length=50, default="")
     phone_number = models.CharField('Phone Number', max_length=50, blank=True, null=True)
@@ -80,5 +80,5 @@ class Book(models.Model):
 class BorrowInformation(models.Model):
     barcode = models.ForeignKey('BarCode')
     user = models.ForeignKey(CustomUser)
-    borrowed_time = models.DateTimeField()
-    due_time = models.DateTimeField()
+    borrowed_time = models.DateTimeField(blank=False)
+    due_time = models.DateTimeField(blank=False)
