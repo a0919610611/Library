@@ -46,7 +46,7 @@ class UserViewSet(viewsets.ModelViewSet):
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         user = User(**serializer.data)
-        user.set_password(serializers.data['password'])
+        user.set_password(serializer.data['password'])
         user.save()
         payload = jwt_payload_handler(user)
         data = dict()
