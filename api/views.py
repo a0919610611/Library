@@ -34,6 +34,8 @@ class UserViewSet(viewsets.ModelViewSet):
     def get_serializer_class(self):
         if self.action == 'login':
             return LoginSerializer
+        elif self.request.user.is_staff:
+            return AdminUserSerializer
         return UserSerializer
 
     def get_queryset(self):
@@ -55,7 +57,7 @@ class UserViewSet(viewsets.ModelViewSet):
 
     @decorators.list_route(methods=['post'])
     def login(self, request):
-        serializer = LoginSerializer(data=request.data)
+        serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         username = serializer.validated_data['username']
         password = serializer.validated_data['password']
