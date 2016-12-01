@@ -42,10 +42,7 @@ class SwaggerSchemaView(APIView):
 schema_view = get_swagger_view(title='Library')
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
-    # url(r'^account/', include('account.urls')),
     url(r'^api/', include('api.urls')),
-    # url(r'^$', schema_view),
     url(r'^$', SwaggerSchemaView.as_view()),
-    # url(r'', include('rest_framework_swagger.urls')),
     # url(r'^api-auth/', include('rest_framework.urls', namespace='rest_framework')),
 ]
