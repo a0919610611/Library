@@ -27,6 +27,8 @@ class UserViewSet(viewsets.ModelViewSet):
     def get_permissions(self):
         if self.action in ('login', 'create'):
             self.permission_classes = [AllowAny, ]
+        elif self.action in ('destroy',):
+            self.permission_classes = [IsAdminUser, ]
         return super(self.__class__, self).get_permissions()
 
     def get_serializer_class(self):
