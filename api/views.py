@@ -45,7 +45,8 @@ class UserViewSet(viewsets.ModelViewSet):
     def create(self, request, *args, **kwargs):
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
-        user = User(**serializer.data)
+        user = User(**serializer.validated_data)
+        user.set_password(serializer.validated_data['password'])
         user.save()
         payload = jwt_payload_handler(user)
         data = dict()
@@ -55,10 +56,9 @@ class UserViewSet(viewsets.ModelViewSet):
     @decorators.list_route(methods=['post'])
     def login(self, request):
         serializer = LoginSerializer(data=request.data)
-        serializer.is_valid(raise_exception=False)
-        # try:
-        username = serializer.data['username']
-        password = serializer.data['password']
+        serializer.is_valid(raise_exception=True)
+        username = serializer.validated_data['username']
+        password = serializer.validated_data['password']
         data = {}
         try:
             user = User.objects.get(username=username)
