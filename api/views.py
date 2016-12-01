@@ -21,7 +21,7 @@ class UserViewSet(viewsets.ModelViewSet):
     create: Create New User And Get Token
     login: Username And Password To ExChange Token
     """
-    lookup_field = 'pk'
+    lookup_field = 'username'
     queryset = User.objects.all()
 
     def get_permissions(self):
@@ -32,9 +32,12 @@ class UserViewSet(viewsets.ModelViewSet):
         return super(self.__class__, self).get_permissions()
 
     def get_serializer_class(self):
+        serializer = UserSerializer
         if self.action == 'login':
-            return LoginSerializer
-        return UserSerializer
+            serializer = LoginSerializer
+        elif self.request.user.is_superuser:
+            serializer = AdminUserSerializer
+        return serializer
 
     def get_queryset(self):
         if self.request.user.is_staff:
@@ -44,18 +47,24 @@ class UserViewSet(viewsets.ModelViewSet):
 
     def create(self, request, *args, **kwargs):
         serializer = self.get_serializer(data=request.data)
-        serializer.is_valid(raise_exception=True)
+        serializer.is_valid()
+        data = dict()
+        # print(serializer.errors)
+        if serializer.errors:
+
+            data['errors'] = serializer.errors
+            return Response(data=data, status=status.HTTP_400_BAD_REQUEST)
         user = User(**serializer.validated_data)
         user.set_password(serializer.validated_data['password'])
         user.save()
         payload = jwt_payload_handler(user)
-        data = dict()
+
         data['token'] = jwt_encode_handler(payload)
         return Response(data=data, status=status.HTTP_201_CREATED)
 
     @decorators.list_route(methods=['post'])
     def login(self, request):
-        serializer = LoginSerializer(data=request.data)
+        serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         username = serializer.validated_data['username']
         password = serializer.validated_data['password']
@@ -63,12 +72,12 @@ class UserViewSet(viewsets.ModelViewSet):
         try:
             user = User.objects.get(username=username)
         except:
-            data['error'] = 'No This User'
-            return Response(data=data, status=status.HTTP_401_UNAUTHORIZED)
+            data['errors'] = 'No This User'
+            return Response(data=data, status=status.HTTP_400_BAD_REQUEST)
         user = authenticate(username=username, password=password)
         if user is None:
-            data['error'] = 'Password Wrong'
-            return Response(data=data, status=status.HTTP_401_UNAUTHORIZED)
+            data['errors'] = 'Password Wrong'
+            return Response(data=data, status=status.HTTP_400_BAD_REQUEST)
         payload = jwt_payload_handler(user)
         data = dict()
         data['token'] = jwt_encode_handler(payload)

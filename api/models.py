@@ -32,10 +32,10 @@ class CustomUserManager(BaseUserManager):
 
 # Create your models here.
 class CustomUser(AbstractBaseUser, PermissionsMixin):
-    username = models.CharField('Username', max_length=30, unique=True)
+    username = models.CharField('Username', max_length=30, unique=True,null=True)
     student_id = models.CharField('StudentId', max_length=10, blank=True, null=True)
     address = models.CharField('Address', max_length=255, blank=True, null=True)
-    email = models.EmailField('Email', unique=True)
+    email = models.EmailField('Email', unique=True, null=True)
     birthday = models.DateField('BirthDay', blank=True, null=True)
     first_name = models.CharField('First name', max_length=50, default="")
     last_name = models.CharField('Last name', max_length=50, default="")
@@ -47,6 +47,7 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
     objects = CustomUserManager()
 
     USERNAME_FIELD = 'username'
+
     REQUIRED_FIELDS = ['email', ]
 
     class Meta:
