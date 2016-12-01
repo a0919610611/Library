@@ -26,7 +26,7 @@ class LoginSerializer(serializers.ModelSerializer):
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
-        fields = ('username', 'email', 'birthday', 'first_name', 'last_name', 'phone_number'
+        fields = ('username', 'email', 'student_id', 'address', 'birthday', 'first_name', 'last_name', 'phone_number'
                   , 'is_staff', 'date_joined', 'password')
         read_only_fields = ('is_staff', 'date_joined')
         extra_kwargs = {
