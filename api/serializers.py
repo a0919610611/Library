@@ -26,7 +26,7 @@ class UserSerializer(serializers.ModelSerializer):
                   , 'is_staff', 'date_joined', 'password')
         read_only_fields = ('is_staff', 'date_joined')
         extra_kwargs = {
-            'password': {'write_only': True},
+            'password': {'write_only': True, 'allow_null': True},
         }
 
 
@@ -37,5 +37,5 @@ class AdminUserSerializer(serializers.ModelSerializer):
                   , 'is_staff', 'date_joined', 'password', 'is_staff')
         read_only_fields = ('date_joined',)
         extra_kwargs = {
-            'password': {'write_only': True},
+            'password': {'write_only': True, 'allow_null': True},
         }
