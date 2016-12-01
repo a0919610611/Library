@@ -21,7 +21,7 @@ class UserViewSet(viewsets.ModelViewSet):
     create: Create New User And Get Token
     login: Username And Password To ExChange Token
     """
-    lookup_field = 'pk'
+    lookup_field = 'username'
     queryset = User.objects.all()
 
     def get_permissions(self):
@@ -64,11 +64,11 @@ class UserViewSet(viewsets.ModelViewSet):
             user = User.objects.get(username=username)
         except:
             data['error'] = 'No This User'
-            return Response(data=data, status=status.HTTP_401_UNAUTHORIZED)
+            return Response(data=data, status=status.HTTP_400_BAD_REQUEST)
         user = authenticate(username=username, password=password)
         if user is None:
             data['error'] = 'Password Wrong'
-            return Response(data=data, status=status.HTTP_401_UNAUTHORIZED)
+            return Response(data=data, status=status.HTTP_400_BAD_REQUEST)
         payload = jwt_payload_handler(user)
         data = dict()
         data['token'] = jwt_encode_handler(payload)
