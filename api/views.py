@@ -56,8 +56,7 @@ class UserViewSet(viewsets.ModelViewSet):
     @decorators.list_route(methods=['post'])
     def login(self, request):
         serializer = LoginSerializer(data=request.data)
-        serializer.is_valid(raise_exception=False)
-        # try:
+        serializer.is_valid(raise_exception=True)
         username = serializer.validated_data['username']
         password = serializer.validated_data['password']
         data = {}
