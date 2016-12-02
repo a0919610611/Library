@@ -49,7 +49,6 @@ class UserViewSet(viewsets.ModelViewSet):
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid()
         data = dict()
-        # print(serializer.errors)
         if serializer.errors:
 
             data['errors'] = serializer.errors

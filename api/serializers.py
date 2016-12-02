@@ -29,10 +29,31 @@ class BookSerializer(serializers.ModelSerializer):
         for barcode in bar_codes_data:
             print(barcode)
             bc = BarCode(**barcode)
+            bc.book = book
             bc.save()
-            book.bar_codes.add(bc)
-            book.save()
+            # book.bar_codes.add(bc)
+        book.save()
         return book
+
+    def update(self, instance, validated_data):
+        bar_codes_data = validated_data.pop('bar_codes')
+        for key, value in validated_data.items():
+            setattr(instance, key, value)
+        bar_codes = [item['bar_code'] for item in bar_codes_data]
+        print(bar_codes)
+        instance_barcodes = []
+        for barcode in instance.bar_codes.all():
+            instance_barcodes.append(barcode.bar_code)
+            if barcode.bar_code not in bar_codes:
+                barcode.delete()
+        for barcode in bar_codes_data:
+            if barcode['bar_code'] in instance_barcodes:
+                continue
+            bc = BarCode(**barcode)
+            bc.book = instance
+            bc.save()
+        instance.save()
+        return instance
 
 
 User = get_user_model()
