@@ -90,7 +90,13 @@ class BookViewSet(viewsets.ModelViewSet):
 
     retrieve: get one book by pk
     """
-    permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
+    # permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
     queryset = Book.objects.all()
     serializer_class = BookSerializer
+    lookup_field = 'pk'
+
+
+class BarCodeViewSet(viewsets.ModelViewSet):
+    queryset = BarCode.objects.all()
+    serializer_class = BarCodeSerializer
     lookup_field = 'pk'

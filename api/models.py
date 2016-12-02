@@ -32,7 +32,7 @@ class CustomUserManager(BaseUserManager):
 
 # Create your models here.
 class CustomUser(AbstractBaseUser, PermissionsMixin):
-    username = models.CharField('Username', max_length=30, unique=True,null=True)
+    username = models.CharField('Username', max_length=30, unique=True, null=True)
     student_id = models.CharField('StudentId', max_length=10, blank=True, null=True)
     address = models.CharField('Address', max_length=255, blank=True, null=True)
     email = models.EmailField('Email', unique=True, null=True)
@@ -66,8 +66,11 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
 
 class BarCode(models.Model):
     bar_code = models.CharField('Bar Code', max_length=100)
-    book = models.ForeignKey('Book')
+    book = models.ForeignKey('Book', null=True, blank=True, related_name='bar_codes', on_delete=models.CASCADE)
     is_borrowed = models.BooleanField('borrowed', default=False)
+
+    def __str__(self):
+        return self.bar_code
 
 
 class Book(models.Model):
@@ -76,6 +79,9 @@ class Book(models.Model):
     publisher = models.CharField('Publisher', max_length=100)
     call_number = models.CharField('Call Number', max_length=100)
     ISBN = models.CharField('ISBN', max_length=100)
+
+    def __str__(self):
+        return self.ISBN
 
 
 class BorrowInformation(models.Model):
