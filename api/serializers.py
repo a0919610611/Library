@@ -3,12 +3,36 @@ from api.models import *
 from django.contrib.auth import get_user_model
 
 
+class BarCodeSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = BarCode
+        fields = ('bar_code', 'is_borrowed', 'book',)
+
+
+class BS(serializers.Serializer):
+    bar_code = serializers.CharField(max_length=100)
+
+
 class BookSerializer(serializers.ModelSerializer):
+    bar_codes = BarCodeSerializer(many=True)
+
     class Meta:
         model = Book
-        fields = ('title', 'author', 'ISBN')
+        fields = ('title', 'author', 'ISBN', 'publisher', 'call_number', 'bar_codes')
         extra_kwargs = {
         }
+        depth = 2
+
+    def create(self, validated_data):
+        bar_codes_data = validated_data.pop('bar_codes')
+        book = Book.objects.create(**validated_data)
+        for barcode in bar_codes_data:
+            print(barcode)
+            bc = BarCode(**barcode)
+            bc.save()
+            book.bar_codes.add(bc)
+            book.save()
+        return book
 
 
 User = get_user_model()
