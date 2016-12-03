@@ -32,7 +32,7 @@ class UserTestCase(APITestCase):
         self.assertEqual(User.objects.count(), 1)
         self.assertEqual(User.objects.get(pk=1).username, 'test')
 
-    def test_login(self):
+    def test_login_and_token(self):
         self.test_create()
         url = reverse('user-login')
         user = dict()
@@ -41,9 +41,32 @@ class UserTestCase(APITestCase):
         response = self.client.post(url, user)
         self.assertEqual(User.objects.count(), 1)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
+        data = dict()
+        data['token'] = response.data['token']
+        verify_url = reverse('verify-token')
+        response = self.client.post(verify_url, data)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        refresh_url = reverse('refresh-token')
+        response = self.client.post(refresh_url, data)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
 
 
 class BookTestCase(APITestCase):
+    def setUp(self):
+        self.user = User.objects.create_superuser('admin', 'admin@admin.com', '12345678')
+
+    def test_create(self):
+        url = reverse('book-list')
+        book = dict()
+        book['title'] = 'title'
+        book['author'] = 'author'
+        book['ISBN'] = '132456778'
+        book['publisher'] = 'Leo'
+        book['call_number'] = '1A2B'
+        self.client.force_login(user=self.user)
+        response = self.client.post(url, book)
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+
     def test_list(self):
         url = reverse('book-list')
         response = self.client.get(url)
