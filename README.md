@@ -1,3 +1,4 @@
+[![Build Status](https://travis-ci.org/a0919610611/Library.svg?branch=master)](https://travis-ci.org/a0919610611/Library)
 # Library
 BackEnd for library borrow system for Software Development Pratice
 
