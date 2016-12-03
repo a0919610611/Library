@@ -37,6 +37,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'corsheaders',
+    'django_nose',
     'rest_framework',
     'rest_framework_swagger',
     'api',
@@ -185,11 +186,11 @@ JWT_AUTH = {
 }
 ## SWAGGER_SETTING
 SWAGGER_SETTINGS = {
-    'USE_SESSION_AUTH': False,
+    'USE_SESSION_AUTH': True,
     'SECURITY_DEFINITIONS': {
-        # 'basic': {
-        #     'type': 'basic'
-        # },
+        'basic': {
+            'type': 'basic'
+        },
         'api_key': {
             'type': 'apiKey',
             'in': 'header',
@@ -201,3 +202,4 @@ SWAGGER_SETTINGS = {
     "APIS_SORTER": "alpha",
     "SHOW_REQUEST_HEADERS": True,
 }
+TEST_RUNNER = 'django_nose.NoseTestSuiteRunner'
