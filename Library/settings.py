@@ -146,6 +146,7 @@ REST_FRAMEWORK = {
     'DATE_INPUT_FORMATS': ['%Y-%m-%d', ],
     'TIME_FORMAT': '%H:%M',
     'TIME_INPUT_FORMATS': '%H:%M',
+    'TEST_REQUEST_DEFAULT_FORMAT': 'json',
 
 }
 

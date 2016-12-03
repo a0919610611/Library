@@ -19,7 +19,7 @@ from rest_framework import routers
 
 router = routers.SimpleRouter()
 
-router.register(r'users', UserViewSet)
+router.register(r'users', UserViewSet, base_name='user')
 router.register(r'books', BookViewSet)
 router.register(r'barcode', BarCodeViewSet)
 
