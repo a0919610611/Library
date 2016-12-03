@@ -137,8 +137,8 @@ REST_FRAMEWORK = {
     ),
     'DEFAULT_AUTHENTICATION_CLASSES': (
         'rest_framework_jwt.authentication.JSONWebTokenAuthentication',
-        'rest_framework.authentication.BasicAuthentication',
-        'rest_framework.authentication.SessionAuthentication',
+        # 'rest_framework.authentication.BasicAuthentication',
+        # 'rest_framework.authentication.SessionAuthentication',
     ),
     'DATETIME_FORMAT': '%Y-%m-%d %H:%M',
     'DATETIME_INPUT_FORMATS': '%Y-%m-%d %H:%M',
@@ -146,6 +146,7 @@ REST_FRAMEWORK = {
     'DATE_INPUT_FORMATS': ['%Y-%m-%d', ],
     'TIME_FORMAT': '%H:%M',
     'TIME_INPUT_FORMATS': '%H:%M',
+    'TEST_REQUEST_DEFAULT_FORMAT': 'json',
 
 }
 
@@ -199,5 +200,4 @@ SWAGGER_SETTINGS = {
     "JSON_EDITOR": True,
     "APIS_SORTER": "alpha",
     "SHOW_REQUEST_HEADERS": True,
-
 }

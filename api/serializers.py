@@ -6,11 +6,8 @@ from django.contrib.auth import get_user_model
 class BarCodeSerializer(serializers.ModelSerializer):
     class Meta:
         model = BarCode
-        fields = ('bar_code', 'is_borrowed', 'book',)
-
-
-class BS(serializers.Serializer):
-    bar_code = serializers.CharField(max_length=100)
+        fields = ('id', 'bar_code', 'is_borrowed', 'book')
+        # depth = 1
 
 
 class BookSerializer(serializers.ModelSerializer):
@@ -18,10 +15,9 @@ class BookSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Book
-        fields = ('title', 'author', 'ISBN', 'publisher', 'call_number', 'bar_codes')
+        fields = ('id', 'title', 'author', 'ISBN', 'publisher', 'call_number', 'bar_codes')
         extra_kwargs = {
         }
-        depth = 2
 
     def create(self, validated_data):
         bar_codes_data = validated_data.pop('bar_codes')
@@ -29,10 +25,31 @@ class BookSerializer(serializers.ModelSerializer):
         for barcode in bar_codes_data:
             print(barcode)
             bc = BarCode(**barcode)
+            bc.book = book
             bc.save()
-            book.bar_codes.add(bc)
-            book.save()
+            # book.bar_codes.add(bc)
+        book.save()
         return book
+
+    def update(self, instance, validated_data):
+        bar_codes_data = validated_data.pop('bar_codes')
+        for key, value in validated_data.items():
+            setattr(instance, key, value)
+        bar_codes = [item['bar_code'] for item in bar_codes_data]
+        print(bar_codes)
+        instance_barcodes = []
+        for barcode in instance.bar_codes.all():
+            instance_barcodes.append(barcode.bar_code)
+            if barcode.bar_code not in bar_codes:
+                barcode.delete()
+        for barcode in bar_codes_data:
+            if barcode['bar_code'] in instance_barcodes:
+                continue
+            bc = BarCode(**barcode)
+            bc.book = instance
+            bc.save()
+        instance.save()
+        return instance
 
 
 User = get_user_model()
@@ -46,8 +63,9 @@ class LoginSerializer(serializers.Serializer):
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
-        fields = ('username', 'email', 'student_id', 'address', 'birthday', 'first_name', 'last_name', 'phone_number'
-                  , 'is_staff', 'date_joined', 'password')
+        fields = (
+            'id', 'username', 'email', 'student_id', 'address', 'birthday', 'first_name', 'last_name', 'phone_number'
+            , 'is_staff', 'date_joined', 'password')
         read_only_fields = ('is_staff', 'date_joined')
         extra_kwargs = {
             'password': {'write_only': True, 'allow_null': True},
@@ -57,8 +75,9 @@ class UserSerializer(serializers.ModelSerializer):
 class AdminUserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
-        fields = ('username', 'email', 'student_id', 'address', 'birthday', 'first_name', 'last_name', 'phone_number'
-                  , 'is_staff', 'date_joined', 'password', 'is_staff')
+        fields = (
+            'id', 'username', 'email', 'student_id', 'address', 'birthday', 'first_name', 'last_name', 'phone_number'
+            , 'is_staff', 'date_joined', 'password', 'is_staff')
         read_only_fields = ('date_joined',)
         extra_kwargs = {
             'password': {'write_only': True, 'allow_null': True},

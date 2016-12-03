@@ -65,7 +65,7 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
 
 
 class BarCode(models.Model):
-    bar_code = models.CharField('Bar Code', max_length=100)
+    bar_code = models.CharField('Bar Code', unique=True, max_length=100)
     book = models.ForeignKey('Book', null=True, blank=True, related_name='bar_codes', on_delete=models.CASCADE)
     is_borrowed = models.BooleanField('borrowed', default=False)
 
@@ -74,11 +74,11 @@ class BarCode(models.Model):
 
 
 class Book(models.Model):
-    title = models.CharField('title', max_length=100)
-    author = models.CharField('Author', max_length=100)
-    publisher = models.CharField('Publisher', max_length=100)
-    call_number = models.CharField('Call Number', max_length=100)
-    ISBN = models.CharField('ISBN', max_length=100)
+    title = models.CharField('title', null=True, blank=True, max_length=100)
+    author = models.CharField('Author', null=True, blank=True, max_length=100)
+    publisher = models.CharField('Publisher', null=True, blank=True, max_length=100)
+    call_number = models.CharField('Call Number', null=True, blank=True, max_length=100)
+    ISBN = models.CharField('ISBN', unique=True, null=True, blank=True, max_length=100)
 
     def __str__(self):
         return self.ISBN

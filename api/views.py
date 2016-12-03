@@ -22,7 +22,6 @@ class UserViewSet(viewsets.ModelViewSet):
     login: Username And Password To ExChange Token
     """
     lookup_field = 'username'
-    queryset = User.objects.all()
 
     def get_permissions(self):
         if self.action in ('login', 'create'):
@@ -49,7 +48,6 @@ class UserViewSet(viewsets.ModelViewSet):
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid()
         data = dict()
-        # print(serializer.errors)
         if serializer.errors:
 
             data['errors'] = serializer.errors
@@ -62,7 +60,7 @@ class UserViewSet(viewsets.ModelViewSet):
         data['token'] = jwt_encode_handler(payload)
         return Response(data=data, status=status.HTTP_201_CREATED)
 
-    @decorators.list_route(methods=['post'])
+    @decorators.list_route(methods=['post'], url_path='login')
     def login(self, request):
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
