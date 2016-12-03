@@ -16,6 +16,7 @@ Including another URLconf
 from django.conf.urls import url, include
 from api.views import *
 from rest_framework import routers
+from rest_framework_jwt.views import refresh_jwt_token, verify_jwt_token
 
 router = routers.SimpleRouter()
 
@@ -24,6 +25,8 @@ router.register(r'books', BookViewSet)
 router.register(r'barcode', BarCodeViewSet)
 
 urlpatterns = [
+    url(r'^api-token-refresh', refresh_jwt_token, name='refresh-token'),
+    url(r'^api-token-verify', verify_jwt_token, name='verify-token'),
     # url(r'^books', views.BookViewSet)
 ]
 urlpatterns += router.urls
