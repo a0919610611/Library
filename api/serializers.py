@@ -20,9 +20,10 @@ class BookSerializer(serializers.ModelSerializer):
         }
 
     def create(self, validated_data):
-        book = Book.objects.create(**validated_data)
         if 'bar_codes' in validated_data:
             bar_codes_data = validated_data.pop('bar_codes')
+        book = Book.objects.create(**validated_data)
+        if bar_codes_data:
             for barcode in bar_codes_data:
                 bc = BarCode(**barcode)
                 bc.book = book
@@ -31,13 +32,16 @@ class BookSerializer(serializers.ModelSerializer):
         return book
 
     def update(self, instance, validated_data):
-        try:
+        if 'bar_codes' in validated_data:
             bar_codes_data = validated_data.pop('bar_codes')
-        except:
-            bar_codes_data = {}
+        else:
+            bar_codes_data = dict()
         for key, value in validated_data.items():
             setattr(instance, key, value)
-        bar_codes = [item['bar_code'] for item in bar_codes_data]
+        if bar_codes_data:
+            bar_codes = [item['bar_code'] for item in bar_codes_data]
+        else:
+            bar_codes = []
         instance_barcodes = []
         for barcode in instance.bar_codes.all():
             instance_barcodes.append(barcode.bar_code)

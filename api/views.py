@@ -91,10 +91,10 @@ class BookViewSet(viewsets.ModelViewSet):
     # permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
     queryset = Book.objects.all()
     serializer_class = BookSerializer
-    lookup_field = 'pk'
+    lookup_field = 'id'
 
 
 class BarCodeViewSet(viewsets.ModelViewSet):
     queryset = BarCode.objects.all()
     serializer_class = BarCodeSerializer
-    lookup_field = 'pk'
+    lookup_field = 'id'

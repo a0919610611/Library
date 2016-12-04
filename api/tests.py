@@ -63,11 +63,38 @@ class BookTestCase(APITestCase):
         book['ISBN'] = '132456778'
         book['publisher'] = 'Leo'
         book['call_number'] = '1A2B'
+        barcodes = []
+        barcode_1 = dict()
+        barcode_1['bar_code'] = '1234'
+        barcode_2 = dict()
+        barcode_2['bar_code'] = '5678'
+        barcodes.append(barcode_1)
+        barcodes.append(barcode_2)
+        book['bar_codes'] = barcodes
         self.client.force_login(user=self.user)
         response = self.client.post(url, book)
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+        book = Book.objects.get()
+        self.assertEqual(book.bar_codes.count(), 2)
+        barcode_1 = book.bar_codes.get(id=1)
+        barcode_2 = book.bar_codes.get(id=2)
+        self.assertEqual(barcode_1.bar_code, '1234')
+        self.assertEqual(barcode_1.book_id, book.id)
+        self.assertEqual(barcode_2.bar_code, '5678')
+        self.assertEqual(barcode_2.book_id, book.id)
 
     def test_list(self):
         url = reverse('book-list')
         response = self.client.get(url)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+    def test_update(self):
+        self.test_create()
+        old_book = Book.objects.get()
+        url = reverse('book-detail', kwargs={'id': old_book.id})
+        new_book = dict()
+        new_book['title'] = 'title2'
+        response = self.client.patch(url, new_book)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        updated_book = Book.objects.get(id=old_book.id)
+        self.assertEqual(updated_book.title, 'title2')
