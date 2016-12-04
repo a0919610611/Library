@@ -3,8 +3,18 @@ from django.urls import reverse
 from rest_framework.test import APITestCase, APIRequestFactory
 from api.models import *
 from django.contrib.auth import get_user_model
+from api.serializers import *
 
 User = get_user_model()
+
+
+# Helper Function
+def create_nomaluser():
+    return User.objects.create_user('test', 'test@test.com', '12345678')
+
+
+def create_superuser():
+    return User.objects.create_superuser('admin', 'admin@admin.com', '12345678')
 
 
 # Create your tests here.
@@ -33,7 +43,7 @@ class UserTestCase(APITestCase):
         self.assertEqual(User.objects.get(pk=1).username, 'test')
 
     def test_login_and_token(self):
-        self.test_create()
+        create_nomaluser()
         url = reverse('user-login')
         user = dict()
         user['username'] = 'test'
@@ -52,8 +62,29 @@ class UserTestCase(APITestCase):
 
 
 class BookTestCase(APITestCase):
+    def create_book(self):
+        book = dict()
+        book['title'] = 'title'
+        book['author'] = 'author'
+        book['ISBN'] = '132456778'
+        book['publisher'] = 'Leo'
+        book['call_number'] = '1A2B'
+        barcodes = []
+        barcode_1 = dict()
+        barcode_1['bar_code'] = '1234'
+        barcode_2 = dict()
+        barcode_2['bar_code'] = '5678'
+        barcodes.append(barcode_1)
+        barcodes.append(barcode_2)
+        book['bar_codes'] = barcodes
+        serializer = BookSerializer(data=book)
+        serializer.is_valid()
+        data = serializer.validated_data
+        return BookSerializer.create(self, data)
+
     def setUp(self):
-        self.user = User.objects.create_superuser('admin', 'admin@admin.com', '12345678')
+        self.superuser = create_superuser()
+        self.normaluser = create_nomaluser()
 
     def test_create(self):
         url = reverse('book-list')
@@ -71,7 +102,10 @@ class BookTestCase(APITestCase):
         barcodes.append(barcode_1)
         barcodes.append(barcode_2)
         book['bar_codes'] = barcodes
-        self.client.force_login(user=self.user)
+        self.client.force_login(user=self.normaluser)
+        response = self.client.patch(url, book)
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+        self.client.force_login(user=self.superuser)
         response = self.client.post(url, book)
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
         book = Book.objects.get()
@@ -89,11 +123,14 @@ class BookTestCase(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
     def test_update(self):
-        self.test_create()
-        old_book = Book.objects.get()
+        old_book = self.create_book()
         url = reverse('book-detail', kwargs={'id': old_book.id})
         new_book = dict()
         new_book['title'] = 'title2'
+        self.client.force_login(user=self.normaluser)
+        response = self.client.patch(url, new_book)
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+        self.client.force_login(user=self.superuser)
         response = self.client.patch(url, new_book)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         updated_book = Book.objects.get(id=old_book.id)
