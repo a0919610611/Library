@@ -4,6 +4,7 @@
 #!! ERROR: mac is undefined. Use list command to see defined gitignore types !!#
 cover
 .idea
+site
 ### macOS ###
 *.DS_Store
 .AppleDouble
