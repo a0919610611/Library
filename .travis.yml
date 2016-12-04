@@ -5,7 +5,9 @@ cache: pip
 
 install: "pip install -r requirements.txt"
 
-script: ./manage.py test --with-coverage
+script: 
+    -coverage run ./manage.py test
+    -coverage report -m 
 
 after_success:
   - coveralls
