@@ -1,5 +1,5 @@
 [![Build Status](https://travis-ci.org/a0919610611/Library.svg?branch=master)](https://travis-ci.org/a0919610611/Library)
-[![Coverage Status](https://coveralls.io/repos/github/a0919610611/Library/badge.svg)](https://coveralls.io/github/a0919610611/Library)
+[![Coverage Status](https://coveralls.io/repos/github/a0919610611/Library/badge.svg?branch=master)](https://coveralls.io/github/a0919610611/Library?branch=master)
 # Library
 BackEnd for library borrow system for Software Development Pratice
 
