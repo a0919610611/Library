@@ -1,6 +1,6 @@
 from django.contrib.auth.models import User, AbstractBaseUser, BaseUserManager, PermissionsMixin
 from django.db import models
-from datetime import datetime
+from datetime import datetime, date
 
 
 class CustomUserManager(BaseUserManager):
@@ -42,8 +42,8 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
     phone_number = models.CharField('Phone Number', max_length=50, blank=True, null=True)
     is_staff = models.BooleanField('staff status', default=False)
     is_active = models.BooleanField('active status', default=True)
-    date_joined = models.DateTimeField('join date', auto_now=datetime.now)
-
+    date_joined = models.DateField('join date', auto_now_add=True)
+    _unban_date = models.DateField('unban date', null=True, blank=True)
     objects = CustomUserManager()
 
     USERNAME_FIELD = 'username'
@@ -53,6 +53,24 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
     class Meta:
         verbose_name = 'user'
         verbose_name_plural = 'users'
+
+    @property
+    def unban_date(self):
+        if self.is_banned:
+            return self._unban_date
+        else:
+            return ""
+
+    @unban_date.setter
+    def unban_date(self, date):
+        self._unban_date = date
+        self.save()
+
+    @property
+    def is_banned(self):
+        if not self._unban_date:
+            return False
+        return date.today() < self._unban_date
 
     def __str__(self):
         return self.first_name + self.last_name
@@ -84,8 +102,8 @@ class Book(models.Model):
         return self.ISBN
 
 
-class BorrowInformation(models.Model):
+class BorrowInfo(models.Model):
     barcode = models.ForeignKey('BarCode')
-    user = models.ForeignKey(CustomUser)
-    borrowed_time = models.DateTimeField(blank=False)
-    due_time = models.DateTimeField(blank=False)
+    user = models.ForeignKey(CustomUser, related_name='borrows', to_field='username')
+    borrowed_time = models.DateField(blank=False)
+    due_time = models.DateField(blank=False)

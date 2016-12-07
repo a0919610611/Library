@@ -31,11 +31,14 @@ class UserViewSet(viewsets.ModelViewSet):
         return super(self.__class__, self).get_permissions()
 
     def get_serializer_class(self):
+        print(self.action)
         serializer = UserSerializer
         if self.action == 'login':
             serializer = LoginSerializer
         elif self.request.user.is_superuser:
             serializer = AdminUserSerializer
+        elif self.action in ('partially_update', 'update'):
+            serializer = UserPatchSerializer
         return serializer
 
     def get_queryset(self):
@@ -104,3 +107,24 @@ class BarCodeViewSet(viewsets.ModelViewSet):
     queryset = BarCode.objects.all()
     serializer_class = BarCodeSerializer
     lookup_field = 'id'
+
+
+class UserBorrowInfo(viewsets.ViewSet):
+    serializer_class = BorrowInfoSerializer
+    queryset = BorrowInfo.objects.all()
+
+    def list(self, request, user_username):
+        # print(user_username)
+        # uuser = User.objects.get(username=user_username)
+        queryset = self.queryset.filter(user=user_username)
+        serializer = self.serializer_class(queryset, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
+    def create(self, request, user_username):
+        serializer = self.serializer_class(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        bi = BorrowInfo(**serializer.validated_data)
+        bi.user_id = user_username
+        bi.save()
+        serializer = self.serializer_class(bi)
+        return Response(serializer.data, status=status.HTTP_201_CREATED)
