@@ -3,6 +3,12 @@ from api.models import *
 from django.contrib.auth import get_user_model
 
 
+class BorrowInfoSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = BorrowInfo
+        fields = ('barcode', 'borrowed_time', 'due_time',)
+
+
 class BarCodeSerializer(serializers.ModelSerializer):
     class Meta:
         model = BarCode
@@ -22,6 +28,8 @@ class BookSerializer(serializers.ModelSerializer):
     def create(self, validated_data):
         if 'bar_codes' in validated_data:
             bar_codes_data = validated_data.pop('bar_codes')
+        else:
+            bar_codes_data = None
         book = Book.objects.create(**validated_data)
         if bar_codes_data:
             for barcode in bar_codes_data:
@@ -66,24 +74,32 @@ class LoginSerializer(serializers.Serializer):
 
 
 class UserSerializer(serializers.ModelSerializer):
+    unban_date = serializers.DateField(required=False, read_only=True)
+
     class Meta:
         model = User
         fields = (
-            'id', 'username', 'email', 'student_id', 'address', 'birthday', 'first_name', 'last_name', 'phone_number'
-            , 'is_staff', 'date_joined', 'password')
-        read_only_fields = ('is_staff', 'date_joined')
+            'id', 'username', 'email', 'student_id', 'address', 'birthday', 'first_name', 'last_name', 'phone_number',
+            'is_banned', 'unban_date', 'is_staff', 'date_joined', 'password',)
+        read_only_fields = ('is_staff', 'is_banned', 'date_joined', 'unban_date',)
         extra_kwargs = {
-            'password': {'write_only': True, 'allow_null': True},
+            'password': {'write_only': True, 'allow_null': False},
         }
 
 
-class AdminUserSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = User
+class UserPatchSerializer(UserSerializer):
+    class Meta(UserSerializer.Meta):
         fields = (
-            'id', 'username', 'email', 'student_id', 'address', 'birthday', 'first_name', 'last_name', 'phone_number'
-            , 'is_staff', 'date_joined', 'password', 'is_staff')
-        read_only_fields = ('date_joined',)
-        extra_kwargs = {
-            'password': {'write_only': True, 'allow_null': True},
-        }
+            'id', 'username', 'email', 'student_id', 'address', 'birthday', 'first_name', 'last_name', 'phone_number',
+            'is_banned', 'unban_date', 'is_staff', 'date_joined', 'password',)
+        read_only_fields = ('username', 'email', 'is_staff', 'unban_date', 'is_banned', 'date_joined')
+
+
+class AdminUserSerializer(UserSerializer):
+    unban_date = serializers.DateField(required=False)
+
+    class Meta(UserSerializer.Meta):
+        fields = (
+            'id', 'username', 'email', 'student_id', 'address', 'birthday', 'first_name', 'last_name', 'phone_number',
+            'is_banned', 'unban_date', 'is_staff', 'date_joined', 'password',)
+        read_only_fields = ('date_joined', 'is_banned')

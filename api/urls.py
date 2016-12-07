@@ -15,8 +15,9 @@ Including another URLconf
 """
 from django.conf.urls import url, include
 from api.views import *
-from rest_framework import routers
+# from rest_framework import routers
 from rest_framework_jwt.views import refresh_jwt_token, verify_jwt_token
+from rest_framework_nested import routers
 
 router = routers.SimpleRouter()
 
@@ -24,9 +25,13 @@ router.register(r'users', UserViewSet, base_name='user')
 router.register(r'books', BookViewSet)
 router.register(r'barcode', BarCodeViewSet)
 
+user_router = routers.NestedSimpleRouter(router, r'users', lookup='user')
+user_router.register(r'borrowinfos', UserBorrowInfo)
 urlpatterns = [
+    url(r'^', include(router.urls)),
+    url(r'^', include(user_router.urls)),
     url(r'^api-token-refresh', refresh_jwt_token, name='refresh-token'),
     url(r'^api-token-verify', verify_jwt_token, name='verify-token'),
     # url(r'^books', views.BookViewSet)
 ]
-urlpatterns += router.urls
+# urlpatterns += router.urls
