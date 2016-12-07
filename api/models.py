@@ -103,7 +103,7 @@ class Book(models.Model):
 
 
 class BorrowInfo(models.Model):
-    barcode = models.ForeignKey('BarCode')
-    user = models.ForeignKey(CustomUser, related_name='borrows', to_field='username')
+    bar_code = models.ForeignKey('BarCode', to_field='bar_code')
+    username = models.ForeignKey(CustomUser, related_name='borrows', to_field='username')
     borrowed_time = models.DateField(blank=False)
     due_time = models.DateField(blank=False)

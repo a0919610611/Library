@@ -106,11 +106,11 @@ class BookViewSet(viewsets.ModelViewSet):
 class BarCodeViewSet(viewsets.ModelViewSet):
     queryset = BarCode.objects.all()
     serializer_class = BarCodeSerializer
-    lookup_field = 'id'
+    lookup_field = 'bar_code'
 
 
 class UserBorrowInfo(viewsets.ViewSet):
-    serializer_class = BorrowInfoSerializer
+    serializer_class = UserBorrowInfoSerializer
     queryset = BorrowInfo.objects.all()
 
     def list(self, request, user_username):
@@ -128,3 +128,9 @@ class UserBorrowInfo(viewsets.ViewSet):
         bi.save()
         serializer = self.serializer_class(bi)
         return Response(serializer.data, status=status.HTTP_201_CREATED)
+
+
+class BorrowInfoViewSet(viewsets.ModelViewSet):
+    serializer_class = BorrowInfoSerializer
+    queryset = BorrowInfo.objects.all()
+    lookup_field = 'id'
