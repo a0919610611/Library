@@ -22,8 +22,8 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = 'mnpw!$&cxxe@lbqa984&_zf-s#_!ms-er@i$i4xh4=e-(2(2$w'
 
-PRODUCTION=os.getenv('PRODUCTION',False)
-DOKCER=os.getenv('DOCKER',False)
+PRODUCTION=(os.getenv('PRODUCTION',False)=='True')
+DOKCER=(os.getenv('DOCKER',False)=='True')
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = not PRODUCTION
