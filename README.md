@@ -29,7 +29,7 @@ sudo pip3 install -r requirments.txt
 ##Docker
 ```
 docker build . -t library
-dokcer run -d -p 8080:8080 library
+docker run --name test -d -p 8080:8080 library
 
 Open Browser And Go localhost:8080
 ```
