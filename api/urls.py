@@ -24,6 +24,7 @@ router = routers.SimpleRouter()
 router.register(r'users', UserViewSet, base_name='user')
 router.register(r'books', BookViewSet)
 router.register(r'barcode', BarCodeViewSet)
+router.register(r'borrowinfos', BorrowInfoViewSet)
 
 user_router = routers.NestedSimpleRouter(router, r'users', lookup='user')
 user_router.register(r'borrowinfos', UserBorrowInfo)

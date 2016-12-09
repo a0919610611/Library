@@ -19,8 +19,17 @@ Sqlite in Development
 MariaDB in Production
 
 #How To Run
+
+##Manually
 ```
 sudo pip3 install -r requirments.txt
 ./init.sh
 ./manage.py runserver (defualt is 127.0.0.1:8000)
+```
+##Docker
+```
+Docker Build . -t Library
+Dokcer run -d -p 8080:8080 Library
+
+Open Browser And Go localhost:8080
 ```

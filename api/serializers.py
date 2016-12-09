@@ -3,10 +3,16 @@ from api.models import *
 from django.contrib.auth import get_user_model
 
 
+class UserBorrowInfoSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = BorrowInfo
+        fields = ('bar_code', 'borrowed_time', 'due_time',)
+
+
 class BorrowInfoSerializer(serializers.ModelSerializer):
     class Meta:
         model = BorrowInfo
-        fields = ('barcode', 'borrowed_time', 'due_time',)
+        fields = ('username', 'bar_code', 'borrowed_time', 'due_time',)
 
 
 class BarCodeSerializer(serializers.ModelSerializer):
