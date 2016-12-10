@@ -28,7 +28,7 @@ DOKCER=(os.getenv('DOCKER',False)=='True')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = not PRODUCTION
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*',]
 
 # Application definition
 
@@ -95,8 +95,9 @@ else:
             'ENGINE': 'django.db.backends.mysql',
             'NAME':'library',
             'HOST':'db',
-            'user':'root',
-            'password':'12345678',
+            'PORT':'3306',
+            'USER':'dbadmin',
+            'PASSWORD':'123456',
         }
     }
 
@@ -140,6 +141,8 @@ DEFAULT_CHARSET = 'utf-8'
 # https://docs.djangoproject.com/en/1.9/howto/static-files/
 
 STATIC_URL = '/static/'
+STATICFILES_DIRS=[os.path.join(BASE_DIR,'static'),]
+STATIC_ROOT=os.path.join(BASE_DIR,'static_root')
 
 # REST FRAMEWORK SETTING
 
