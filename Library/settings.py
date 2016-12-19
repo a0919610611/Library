@@ -22,13 +22,13 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = 'mnpw!$&cxxe@lbqa984&_zf-s#_!ms-er@i$i4xh4=e-(2(2$w'
 
-PRODUCTION=(os.getenv('PRODUCTION',False)=='True')
-DOKCER=(os.getenv('DOCKER',False)=='True')
+PRODUCTION = (os.getenv('PRODUCTION', False) == 'True')
+DOKCER = (os.getenv('DOCKER', False) == 'True')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = not PRODUCTION
+DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*', ]
 
 # Application definition
 
@@ -39,8 +39,10 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django_extensions',
     'corsheaders',
     'django_nose',
+    'haystack',
     'rest_framework',
     'rest_framework_swagger',
     'api',
@@ -93,10 +95,11 @@ else:
     DATABASES = {
         'default': {
             'ENGINE': 'django.db.backends.mysql',
-            'NAME':'library',
-            'HOST':'db',
-            'user':'root',
-            'password':'12345678',
+            'NAME': 'library',
+            'HOST': 'db',
+            'PORT': '3306',
+            'USER': 'dbadmin',
+            'PASSWORD': '123456',
         }
     }
 
@@ -140,6 +143,8 @@ DEFAULT_CHARSET = 'utf-8'
 # https://docs.djangoproject.com/en/1.9/howto/static-files/
 
 STATIC_URL = '/static/'
+STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static'), ]
+STATIC_ROOT = os.path.join(BASE_DIR, 'static_root')
 
 # REST FRAMEWORK SETTING
 
@@ -219,3 +224,14 @@ SWAGGER_SETTINGS = {
     "SHOW_REQUEST_HEADERS": True,
 }
 TEST_RUNNER = 'django_nose.NoseTestSuiteRunner'
+NOSE_ARGS = [
+    '--nocapture',
+    '--nologcapture',
+]
+HAYSTACK_CONNECTIONS = {
+    'default': {
+        'ENGINE': 'haystack.backends.elasticsearch_backend.ElasticsearchSearchEngine',
+        'URL': 'http://127.0.0.1:9200/',
+        'INDEX_NAME': 'haystack',
+    },
+}

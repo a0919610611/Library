@@ -6,5 +6,7 @@ os.environ.setdefault("DJANGO_SETTINGS_MODULE", "Library.settings")
 django.setup()
 from api.models import CustomUser
 
-
-CustomUser.objects.create_superuser("admin","admin@admin.com","12345678")
+try:
+    CustomUser.objects.create_superuser("admin","admin@admin.com","12345678")
+except:
+    print("admin exists")
