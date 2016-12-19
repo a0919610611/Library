@@ -9,8 +9,7 @@ cache: pip
 
 
 before_install:
-  - curl -O https://download.elastic.co/elasticsearch/release/org/elasticsearch/distribution/deb/elasticsearch/2.4.3/elasticsearch-2.4.3.deb \
-   && sudo dpkg -i --force-confnew elasticsearch-2.4.3.deb && sudo service elasticsearch restart
+  - curl -O https://download.elastic.co/elasticsearch/release/org/elasticsearch/distribution/deb/elasticsearch/2.4.3/elasticsearch-2.4.3.deb && sudo dpkg -i --force-confnew elasticsearch-2.4.3.deb && sudo service elasticsearch restart
 
 
 install: "pip install -r requirements.txt"
