@@ -16,3 +16,5 @@ virtualenv==15.0.2
 mkdocs
 drf-nested-routers
 django-filter
+drf-haystack
+elasticsearch

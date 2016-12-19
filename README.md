@@ -8,6 +8,9 @@ BackEnd for library borrow system for Software Development Pratice
 Full documention for the project is [docs](https://a0919610611.github.io/Library/).
 #Technology Stack
 Python3
+elasticsearch for search backend
+django haystack
+drf-haystack
  [Django](https://www.djangoproject.com/
 )  
 [Django Rest Framework] (http://www.django-rest-framework.org/)   

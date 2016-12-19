@@ -10,7 +10,7 @@ User = get_user_model()
 
 # Helper Function
 def create_nomaluser():
-    return User.objects.create_user('test', 'test@test.com', '12345678')
+    return User.objects.create_user('test', 'test@test.com','12345678')
 
 
 def create_superuser():
