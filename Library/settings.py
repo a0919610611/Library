@@ -13,6 +13,8 @@ https://docs.djangoproject.com/en/1.9/ref/settings/
 import os
 import datetime
 
+# from Library.local_settings import *
+
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
@@ -39,10 +41,9 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'django_extensions',
     'corsheaders',
     'django_nose',
-    'haystack',
+    # 'haystack',
     'rest_framework',
     'rest_framework_swagger',
     'api',
@@ -228,10 +229,17 @@ NOSE_ARGS = [
     '--nocapture',
     '--nologcapture',
 ]
-HAYSTACK_CONNECTIONS = {
-    'default': {
-        'ENGINE': 'haystack.backends.elasticsearch_backend.ElasticsearchSearchEngine',
-        'URL': 'http://127.0.0.1:9200/',
-        'INDEX_NAME': 'haystack',
-    },
-}
+# if PRODUCTION:
+#     HAYSTACK_CONNECTIONS = {
+#         'default': {
+#             'ENGINE': 'haystack.backends.elasticsearch_backend.ElasticsearchSearchEngine',
+#             'URL': 'http://127.0.0.1:9200/',
+#             'INDEX_NAME': 'haystack',
+#         },
+#     }
+#     EMAIL_USE_TLS = True
+#     EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+#     EMAIL_HOST = 'smtp.gmail.com'
+#
+#     EMAIL_PORT = 587
+#     DEFAULT_FROM_EMAIL = EMAIL_HOST_USER

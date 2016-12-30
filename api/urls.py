@@ -25,7 +25,7 @@ router.register(r'users', UserViewSet, base_name='user')
 router.register(r'books', BookViewSet)
 router.register(r'barcode', BarCodeViewSet)
 router.register(r'borrowinfos', BorrowInfoViewSet)
-router.register("book/search", BookSearchViewSet, base_name='book-search')
+# router.register("book/search", BookSearchViewSet, base_name='book-search')
 user_router = routers.NestedSimpleRouter(router, r'users', lookup='user')
 user_router.register(r'borrowinfos', UserBorrowInfo)
 urlpatterns = [
