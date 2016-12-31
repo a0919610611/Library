@@ -129,9 +129,9 @@ class UserBorrowInfo(viewsets.ViewSet):
     queryset = BorrowInfo.objects.all()
 
     def list(self, request, user_username):
-        # print(user_username)
-        # uuser = User.objects.get(username=user_username)
-        queryset = self.queryset.filter(user=user_username)
+        print(user_username)
+        # user = User.objects.get(username=user_username)
+        queryset = self.queryset.filter(username=user_username)
         serializer = self.serializer_class(queryset, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
 
