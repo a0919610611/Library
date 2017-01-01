@@ -140,6 +140,9 @@ class BorrowInfoViewSet(viewsets.ModelViewSet):
         if 'username' in self.request.query_params:
             username = self.request.query_params['username']
             return BorrowInfo.objects.filter(username=username)
+        elif 'barcode' in self.request.query_params:
+            barcode = self.request.query_params['barcode']
+            return BorrowInfo.objects.filter(bar_code=barcode)
         else:
             return BorrowInfo.objects.all()
 
