@@ -124,28 +124,37 @@ class BarCodeViewSet(viewsets.ModelViewSet):
     lookup_field = 'bar_code'
 
 
-class UserBorrowInfo(viewsets.ViewSet):
-    serializer_class = UserBorrowInfoSerializer
-    queryset = BorrowInfo.objects.all()
-
-    def list(self, request, user_username):
-        print(user_username)
-        # user = User.objects.get(username=user_username)
-        queryset = self.queryset.filter(username=user_username)
-        serializer = self.serializer_class(queryset, many=True)
-        return Response(serializer.data, status=status.HTTP_200_OK)
-
-    def create(self, request, user_username):
-        serializer = self.serializer_class(data=request.data)
-        serializer.is_valid(raise_exception=True)
-        bi = BorrowInfo(**serializer.validated_data)
-        bi.user_id = user_username
-        bi.save()
-        serializer = self.serializer_class(bi)
-        return Response(serializer.data, status=status.HTTP_201_CREATED)
-
-
 class BorrowInfoViewSet(viewsets.ModelViewSet):
     serializer_class = BorrowInfoSerializer
-    queryset = BorrowInfo.objects.all()
+
     lookup_field = 'id'
+
+    def get_queryset(self):
+        if 'username' in self.request.query_params:
+            username = self.request.query_params['username']
+            return BorrowInfo.objects.filter(username=username)
+        else:
+            return BorrowInfo.objects.all()
+
+    def create(self, request, *args, **kwargs):
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        data = serializer.validated_data
+        bar_code = BarCode.objects.get(bar_code=data['bar_code'])
+        if bar_code.is_borrowed:
+            error = {'error': 'the barcode is borrowed'}
+            return Response(data=error, status=status.HTTP_400_BAD_REQUEST)
+        else:
+            BorrowInfo.objects.create(**data)
+            bar_code.is_borrowed = True
+            bar_code.save()
+            return Response(data=data, status=status.HTTP_201_CREATED)
+
+    def destroy(self, request, *args, **kwargs):
+        borrow_info = self.get_object()
+        bar_code = borrow_info.bar_code
+        bar_code = BarCode.objects.get(bar_code=bar_code)
+        bar_code.is_borrowed = False
+        bar_code.save()
+        borrow_info.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
