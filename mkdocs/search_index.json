@@ -2,8 +2,13 @@
     "docs": [
         {
             "location": "/",
-            "text": "User Login Work Flow\n\n\nLogin (username & password) -> Get JWT (JSON Web Token)\n\n\nAbout JWT\n\n\nExpiration Time : 1 day \nRefresh Expiration Time : 30 days\n\n\nRefresh token everyday and login again every month ( for user experience)",
+            "text": "Test EndPoint\n\n\nGo to root url , and you test api using html form (powered by django rest swaggers),but\n\nsome endpoints just can only using json format(using curl or Postman to test).\n\n\nUser Login Work Flow\n\n\nLogin (username & password) -> Get JWT (JSON Web Token)\n\n\nAbout JWT\n\n\nExpiration Time : 1 day \nRefresh Expiration Time : 30 days\n\n\nRefresh token everyday and login again every month ( for user experience)",
             "title": "Home"
+        },
+        {
+            "location": "/#test-endpoint",
+            "text": "Go to root url , and you test api using html form (powered by django rest swaggers),but \nsome endpoints just can only using json format(using curl or Postman to test).",
+            "title": "Test EndPoint"
         },
         {
             "location": "/#user-login-work-flow",
@@ -14,6 +19,71 @@
             "location": "/#about-jwt",
             "text": "Expiration Time : 1 day \nRefresh Expiration Time : 30 days  Refresh token everyday and login again every month ( for user experience)",
             "title": "About JWT"
+        },
+        {
+            "location": "/api/",
+            "text": "API Endpoint document\n\n\n/api/users/\n\n\n\n\nGET:list all users (only admin can get all users ,other just can get himself)\n\n\nPOST:Registration , and get JWT Token to login.\n\n\nusername\n\n\nemail\n\n\npassword\n\n\nfirst_name\n\n\nlast_name\n\n\nstudent_id\n\n\naddress\n\n\nbirthday\n\n\nphone_number\n\n\nis_staff(admin only)\n\n\nunban_date(admin only)\n\n\n\n\n\n\n\n\n/api/users/{username}\n\n\n\n\nGET: get user's profile\n\n\nPUT: update user's profile\n\n\nDELETE : delete user , only admin can do\n\n\n\n\n/api/users/login\n\n\n\n\nPOST:using username and password to exchange JWT Token\n\n\nusername\n\n\npassword\n\n\n\n\n\n\n\n\n/api/api-token-refresh\n\n\n\n\nPOST : using existing token which hasn't expired to\nexchange a new token.\n\n\ntoken\n\n\n\n\n\n\n\n\n/api/api-token-verify\n\n\n\n\nPOST : check token validity\n\n\ntoken\n\n\n\n\n\n\n\n\n/api/books/\n\n\n\n\nGET : List All Books\n\n\n/api/books/?ISBN={ISBN} get book using ISBN\n\n\n\n\n\n\nPOST : Add a book (admin only)\n\n\n\n\n/api/books/{id}\n\n\n\n\nGET : Retrieve Book by id\n\n\nPUT: Update Book(admin only)\n\n\nDELETE : remove book (admin only)\n\n\n\n\n/api/barcodes/\n\n\n\n\nGET : List all barcodes\n\n\nPOST : Create a barcode(admin only)\n\n\n\n\n/api/barcodes/{barcode}\n\n\n\n\nGET : Retrieve barcode\n\n\nPUT : Update (admin only)\n\n\nDELETE: Remove (admin only)\n\n\n\n\n/api/borrowinfos/\n\n\n\n\nGET : List All Borrow Information\n\n\n/api/borrowinfos?username={username}\n\n    filter the user's borrow informations\n\n\n\n\n\n\nPOST : Create\n\n\n\n\n/api/borrowinfos/{id}/\n\n\n\n\nGET : Retrieve Borrow Information\n\n\nPUT : Update (admin only)\n\n\nDELETE : Remove (admin only)",
+            "title": "Api"
+        },
+        {
+            "location": "/api/#api-endpoint-document",
+            "text": "",
+            "title": "API Endpoint document"
+        },
+        {
+            "location": "/api/#apiusers",
+            "text": "GET:list all users (only admin can get all users ,other just can get himself)  POST:Registration , and get JWT Token to login.  username  email  password  first_name  last_name  student_id  address  birthday  phone_number  is_staff(admin only)  unban_date(admin only)",
+            "title": "/api/users/"
+        },
+        {
+            "location": "/api/#apiusersusername",
+            "text": "GET: get user's profile  PUT: update user's profile  DELETE : delete user , only admin can do",
+            "title": "/api/users/{username}"
+        },
+        {
+            "location": "/api/#apiuserslogin",
+            "text": "POST:using username and password to exchange JWT Token  username  password",
+            "title": "/api/users/login"
+        },
+        {
+            "location": "/api/#apiapi-token-refresh",
+            "text": "POST : using existing token which hasn't expired to\nexchange a new token.  token",
+            "title": "/api/api-token-refresh"
+        },
+        {
+            "location": "/api/#apiapi-token-verify",
+            "text": "POST : check token validity  token",
+            "title": "/api/api-token-verify"
+        },
+        {
+            "location": "/api/#apibooks",
+            "text": "GET : List All Books  /api/books/?ISBN={ISBN} get book using ISBN    POST : Add a book (admin only)",
+            "title": "/api/books/"
+        },
+        {
+            "location": "/api/#apibooksid",
+            "text": "GET : Retrieve Book by id  PUT: Update Book(admin only)  DELETE : remove book (admin only)",
+            "title": "/api/books/{id}"
+        },
+        {
+            "location": "/api/#apibarcodes",
+            "text": "GET : List all barcodes  POST : Create a barcode(admin only)",
+            "title": "/api/barcodes/"
+        },
+        {
+            "location": "/api/#apibarcodesbarcode",
+            "text": "GET : Retrieve barcode  PUT : Update (admin only)  DELETE: Remove (admin only)",
+            "title": "/api/barcodes/{barcode}"
+        },
+        {
+            "location": "/api/#apiborrowinfos",
+            "text": "GET : List All Borrow Information  /api/borrowinfos?username={username} \n    filter the user's borrow informations    POST : Create",
+            "title": "/api/borrowinfos/"
+        },
+        {
+            "location": "/api/#apiborrowinfosid",
+            "text": "GET : Retrieve Borrow Information  PUT : Update (admin only)  DELETE : Remove (admin only)",
+            "title": "/api/borrowinfos/{id}/"
         }
     ]
 }
