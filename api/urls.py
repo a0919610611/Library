@@ -24,15 +24,11 @@ router = routers.SimpleRouter()
 router.register(r'users', UserViewSet, base_name='user')
 router.register(r'books', BookViewSet)
 router.register(r'barcode', BarCodeViewSet)
-router.register(r'borrowinfos', BorrowInfoViewSet)
+router.register(r'borrowinfos', BorrowInfoViewSet, base_name='borrowinfo')
 # router.register("book/search", BookSearchViewSet, base_name='book-search')
-user_router = routers.NestedSimpleRouter(router, r'users', lookup='user')
-user_router.register(r'borrowinfos', UserBorrowInfo)
 urlpatterns = [
     url(r'^', include(router.urls)),
-    url(r'^', include(user_router.urls)),
     url(r'^api-token-refresh', refresh_jwt_token, name='refresh-token'),
     url(r'^api-token-verify', verify_jwt_token, name='verify-token'),
-    # url(r'^books', views.BookViewSet)
 ]
 # urlpatterns += router.urls
