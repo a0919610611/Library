@@ -117,6 +117,13 @@ class BookViewSet(viewsets.ModelViewSet):
             self.permission_classes = [IsAdminUser, ]
         return super(self.__class__, self).get_permissions()
 
+    def get_queryset(self):
+        if 'ISBN' in self.request.query_params:
+            isbn = self.request.query_params['ISBN']
+            return Book.objects.filter(ISBN=isbn)
+        else:
+            return Book.objects.all()
+
 
 class BarCodeViewSet(viewsets.ModelViewSet):
     queryset = BarCode.objects.all()

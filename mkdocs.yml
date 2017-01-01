@@ -1,4 +1,5 @@
 site_name: Library
 pages:
     - Home: index.md
+    - Api: api.md
 theme: readthedocs
