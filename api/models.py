@@ -73,7 +73,7 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
         return date.today() < self._unban_date
 
     def __str__(self):
-        return self.first_name + self.last_name
+        return self.username
 
     def get_short_name(self):
         return self.first_name

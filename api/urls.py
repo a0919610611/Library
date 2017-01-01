@@ -23,7 +23,7 @@ router = routers.SimpleRouter()
 
 router.register(r'users', UserViewSet, base_name='user')
 router.register(r'books', BookViewSet)
-router.register(r'barcode', BarCodeViewSet)
+router.register(r'barcodes', BarCodeViewSet)
 router.register(r'borrowinfos', BorrowInfoViewSet, base_name='borrowinfo')
 # router.register("book/search", BookSearchViewSet, base_name='book-search')
 urlpatterns = [

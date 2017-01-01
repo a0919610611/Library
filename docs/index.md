@@ -12,3 +12,5 @@ Refresh Expiration Time : 30 days
 Refresh token everyday and login again every month ( for user experience)  
 
 
+#Using JWT To Authorization
+In Header:set Authorization : JWT {Your Token} 

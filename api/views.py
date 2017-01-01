@@ -145,17 +145,22 @@ class BorrowInfoViewSet(viewsets.ModelViewSet):
 
     def create(self, request, *args, **kwargs):
         serializer = self.get_serializer(data=request.data)
+        print('hi')
         serializer.is_valid(raise_exception=True)
         data = serializer.validated_data
+        # print(data)
+        # print(data['username'].username)
         bar_code = BarCode.objects.get(bar_code=data['bar_code'])
         if bar_code.is_borrowed:
             error = {'error': 'the barcode is borrowed'}
             return Response(data=error, status=status.HTTP_400_BAD_REQUEST)
         else:
-            BorrowInfo.objects.create(**data)
+            bi = BorrowInfo.objects.create(**data)
             bar_code.is_borrowed = True
             bar_code.save()
-            return Response(data=data, status=status.HTTP_201_CREATED)
+            serializer = self.get_serializer(bi)
+            print(serializer.data)
+            return Response(data=serializer.data, status=status.HTTP_201_CREATED)
 
     def destroy(self, request, *args, **kwargs):
         borrow_info = self.get_object()
